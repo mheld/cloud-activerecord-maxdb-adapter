@@ -17,6 +17,16 @@ module Arel
         ", #{visit o.expr}"
       end
     end
+
+    def visit_Arel_Nodes_InsertStatement o, a
+        puts o.columns
+        puts o.methods - Object.methods
+        puts o.values
+        puts o.relation
+        puts a
+        puts a.methods
+        super o, a
+    end
     
     Arel::Visitors::VISITORS['maxdb'] = Arel::Visitors::MaxDB
   end
