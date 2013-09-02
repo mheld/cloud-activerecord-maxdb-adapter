@@ -12,7 +12,8 @@ module ::ArJdbc
 	# Along with each newly created table, we need a corresponding sequence for primary key generation.
 	def create_table(name, options = {})
 	  super(name, options)
-	  execute("CREATE SEQUENCE #{default_sequence_name(name)} RESET BY SELECT IFNULL(MAX(ID), 0) + 1 from #{name}")
+	  puts options
+	  execute("CREATE SEQUENCE #{default_sequence_name(name)} RESET BY SELECT IFNULL(MAX(ID), 0) + 1 from \"TEMP\".#{name}")
 	end
 	
 	# ... and we need to take care for the clean up.
