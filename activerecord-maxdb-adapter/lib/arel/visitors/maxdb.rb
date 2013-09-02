@@ -19,13 +19,7 @@ module Arel
     end
 
     def visit_Arel_Nodes_InsertStatement o, a
-        puts o.columns
-        puts o.methods - Object.methods
-        puts o.values
-        puts o.relation
-        puts a
-        puts a.methods
-        super o, a
+    	"INSERT INTO #{visit o.relation, a} values #{(visit o.values, a if o.values)}"
     end
     
     Arel::Visitors::VISITORS['maxdb'] = Arel::Visitors::MaxDB
