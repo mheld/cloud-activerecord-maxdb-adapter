@@ -12,7 +12,7 @@ module ::ArJdbc
 	# Along with each newly created table, we need a corresponding sequence for primary key generation.
 	def create_table(name, options = {})
 	  super(name, options)
-	  execute("CREATE SEQUENCE #{default_sequence_name(name)} START WITH 1 INCREMENT BY 1")
+	  execute("CREATE SEQUENCE #{default_sequence_name(name)} RESET BY SELECT IFNULL(MAX(ID), 0) + 1 from #{name}")
 	end
 	
 	# ... and we need to take care for the clean up.
@@ -28,11 +28,12 @@ module ::ArJdbc
 	
 	# Get the next value from the sequence. See http://maxdb.sap.com/doc/7_8/44/e15c6499fc03fde10000000a1553f6/content.htm
 	def next_sequence_value(sequence_name)
-	  execute("SELECT #{sequence_name}.NEXTVAL id FROM dual").first['id'].to_i
+	  execute("SELECT #{sequence_name}.NEXTVAL FROM DUMMY").first["#{sequence_name}.NEXTVAL"].to_i
 	end
 	
 	def modify_types(tp)
-	  tp[:primary_key] = "INTEGER NOT NULL DEFAULT SERIAL PRIMARY KEY"
+	  #tp[:primary_key] = "INTEGER NOT NULL DEFAULT SERIAL PRIMARY KEY"
+	  tp[:primary_key] = "INTEGER NOT NULL PRIMARY KEY"
 	  tp[:string] = { :name => 'VARCHAR', :limit => 255 }
 	  tp[:text] = { :name => 'VARCHAR', :limit => 5000 }
 	  tp[:integer] = { :name => 'INTEGER', :limit => nil }
