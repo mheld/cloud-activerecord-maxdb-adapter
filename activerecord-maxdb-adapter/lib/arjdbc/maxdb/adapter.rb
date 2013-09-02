@@ -13,8 +13,9 @@ module ::ArJdbc
 	def create_table(name, options = {})
 	  super(name, options)
 	  puts options
-	  execute("CREATE SEQUENCE #{default_sequence_name(name)} RESET BY SELECT IFNULL(MAX(ID), 0) + 1 from \"SYSTEM\".#{name}")
-	  #TODO: make this *NOT* use the "SYSTEM" scope
+	  execute("CREATE SEQUENCE #{default_sequence_name(name)} START WITH 1 INCREMENT BY 1") #temporary -- the bottom should be the right one
+	  # need to figure out why the table isn't created yet when we get here
+	  #execute("CREATE SEQUENCE #{default_sequence_name(name)} RESET BY SELECT IFNULL(MAX(ID), 0) + 1 from \"SYSTEM\".#{name}")
 	end
 	
 	# ... and we need to take care for the clean up.
